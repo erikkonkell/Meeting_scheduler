@@ -1,0 +1,51 @@
+<%- include("header", {title: title}); %>
+<%- include("side_bar.ejs", {login: login}); %>
+<div class="main">
+
+    <h1>Create a new meeting</h1>
+    
+    <div class="form_box">
+        
+        <form action="/create_meeting" method="POST">
+            <% if (error_title) { %>
+                <div class="error_box">
+                    <pre><%= error_title %></pre>
+                </div>
+                <% } %>
+                <p>Title</p>
+                <div>
+                    <input type="text" id="title" name="title" maxlength=30>
+                </div>        
+                <p>Description</p>
+                <div>
+                    <input type="text" id="description" name="description" maxlength=300>
+                </div>
+                <p>attendants by username</p>
+                <div>
+                    <input type="text" id="attendants" name="attendants" placeholder="user1, user2, user3">
+                </div>
+                <p>Selecet possble times for voting</p>
+                <div id="conttainer">
+                    <p>option 1</p>
+                    <div>
+                        <input type="datetime-local" name="starttime1" id="starttime1">
+                        <input type="datetime-local" name="endtime1" id="endtime1">
+                    </div>
+                    <p>option 2</p>
+                    <div>
+                        <input type="datetime-local" name="starttime2" id="starttime2">
+                        <input type="datetime-local" name="endtime2" id="endtime2">
+                    </div>
+                    <p>option 3</p>
+                    <div>
+                        <input type="datetime-local" name="starttime3" id="starttime3">
+                        <input type="datetime-local" name="endtime3" id="endtime3">
+                    </div>
+                </div>
+                <div>
+                    <input type="submit" value="Create Meeting">
+                </div>
+            </form>
+        </div>
+</div>
+<%- include("footer"); %>

@@ -1,0 +1,32 @@
+{
+  "name": "meeting-scheduler",
+  "version": "1.0.0",
+  "description": "web meeting scheduler",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-flash": "0.0.2",
+    "express-session": "^1.17.1",
+    "method-override": "^3.0.0",
+    "node-outlook": "^1.1.8",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "promise": "^8.1.0",
+    "promise-mysql": "^4.1.3",
+    "tui-calendar": "^1.12.14"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "devStart": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "meeting",
+    "scheduler"
+  ],
+  "author": "Erik Konkell",
+  "license": "ISC"
+}

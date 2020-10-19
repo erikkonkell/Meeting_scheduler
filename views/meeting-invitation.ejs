@@ -1,0 +1,26 @@
+<%- include("header", {title: title}); %>
+<%- include("side_bar.ejs") %>
+
+<div class="main">
+
+    <h1>view you invitations</h1>
+    
+    <table>
+        <tr>
+            <th>name</th>
+            <th>host</th>
+            <th>description</th>
+            <th>vote on time</th>
+        </tr>
+        <% for (const row of res) { %>
+            <tr>
+                <td><%= row.title %></td>
+                <td><%= row.host %></td>
+                <td><%= row.description %></td>
+                <td><a href="/meeting-invitation/<%= row.meetingID%>">Vote</a></td>
+            </tr>
+        <% } %>
+    </table>
+</div>
+        
+<%- include("footer"); %>

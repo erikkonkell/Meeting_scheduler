@@ -1,0 +1,24 @@
+<%- include("header", {title: title}); %>
+<%- include("side_bar.ejs", {login: login}); %>
+<div class="main">
+    <p>Title: <%= res[0].title%></p>
+    <p>Description: <%= res[0].description %></p>
+    <table>
+        <tr>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Approval</th>
+            <th>View Approval</th>
+        </tr>
+        <% for (const row of res) { %> 
+            <tr>
+                <td><%= row.start_time %></td>
+                <td><%= row.end_time %></td>
+                <td><%= row.antal %></td>
+                <td><a href="/meeting-manager/<%= row.id %>/<%= row.start_time%>/<%= row.end_time%>">View</a></td>
+            </tr>
+        <% } %>
+    </table>
+</div>
+
+<%- include("footer"); %>

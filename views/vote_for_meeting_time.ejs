@@ -1,0 +1,33 @@
+<%- include("header", {title: title}); %>
+<%- include("side_bar.ejs", {login: login}); %>
+<div class="main">
+
+    <h1>Select all the times that you can attend</h1>
+    <h2>Title: <%= res[0].title %></h2>
+    <h2>description</h2>
+    <p><%= res[0].description %></p>
+    <form action="/meeting-invitation/<%= id %>" method="POST">
+        <table>
+            <tr>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Vote</th>
+            </tr>
+            <input type="hidden" name="user" value="<%= res[0].username%>"
+            <% for (const row of res) { %>
+                <% let i = 0 %>
+                <tr>
+                    <input type="hidden" name="start_time" value="<%= row.start_time %>">
+                    <input type="hidden" name="end_time" value="<%= row.end_time %>">
+                    <td><%= row.start_time %></td>
+                    <td><%= row.end_time %></td>
+                    
+                    <td><p>Any value if you can attend: </p><input type="text" name="vote" maxlength=1></td>
+                </tr>
+                <% i++ %>
+                <% } %>
+            </table>
+            <input type="submit" value="Submit votes"> 
+        </form>
+    </div>
+        <%- include("footer"); %>

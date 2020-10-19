@@ -1,0 +1,20 @@
+<%- include("header", {title: title}); %>
+<%- include("side_bar.ejs", {login: login}); %>
+<div class="main">
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Confirm Time<br>&<br>Check Votes</th>
+        </tr>
+        <% for (const row of res) { %> 
+            <tr>
+                <td><%= row.title %></td>
+                <td><%= row.description %></td>
+                <td><a href="/meeting-manager/<%= row.id%>">Edit</a></td>
+            </tr>
+        <% } %>
+    </table>
+</div>
+
+<%- include("footer"); %>

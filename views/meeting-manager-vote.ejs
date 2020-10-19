@@ -1,0 +1,27 @@
+<%- include("header", {title: title}); %>
+<%- include("side_bar.ejs", {login: login}); %>
+<div class="main">
+    <form action="/meeting-manager/<%= id%>/<%= start %>/<%= end %>" method="POST">
+    <p>Start: <%= start %></p>
+    <p>End: <%= end %></p>
+    <table>
+        <tr>
+            <th>Guest</th>
+            <th>Voted</th>
+        </tr>
+        <% for (const row of res) { %> 
+            <tr>
+                <td><%= row.invite_user %></td>
+                <td><%= row.response %></td>
+                <input type="hidden" value="<%= row.invite_user %>" name="users">
+                <input type="hidden" value="<%= row.response %>" name="responses">
+            </tr>
+        <% } %>
+    </table>
+        <input type="hidden" value="<%= host %>" name="host">
+        <input type="submit" value="Approve Time">
+    </form>
+    <a href='/meeting-manager/<%=id%>'><button>Back</button></a>
+</div>
+
+<%- include("footer"); %>

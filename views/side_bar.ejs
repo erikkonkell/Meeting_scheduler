@@ -1,0 +1,13 @@
+<div class="sidenav">
+    <a href="/">Start page</a>
+    <% if (login) { %> 
+        <a href="/mypage">My Page</a> 
+        <a href="/create-meeting">Create Meeting</a>
+        <a href="/meeting-invitation">Invitations</a>
+        <a href="/meeting-manager">Hosted Meetings</a>
+        <a href="/logout">Logout</a>
+    <% } else { %>
+        <a href="/login">login</a>
+        <a href="/register">register</a>
+    <% } %>   
+</div>
