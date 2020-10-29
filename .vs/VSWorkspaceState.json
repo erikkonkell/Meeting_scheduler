@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\route",
+    "\\src"
   ],
-  "SelectedNode": "\\index.js",
+  "SelectedNode": "\\src\\meeting_scheduler.js",
   "PreviewInSolutionExplorer": false
 }

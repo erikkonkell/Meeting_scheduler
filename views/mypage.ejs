@@ -3,9 +3,22 @@
 <div class="main">
 <h1>Welcome <%= name %></h1>
 
-  <p>
-    this is just an other test if side bar is working
-  </p>
+<p>Show my meetings</p>
+<form action="/mypage" method="POST">
+<input type="datetime-local" name="start"> <input type="datetime-local" name="end">
+<input type="submit" value="Get Meetings">
+</form>
+<% if (res) { %>
+  <% for (const row of res) { %>
+    <h2><%= row.title %></h2>
+    <p><%= row.description %></p>
+    <p>Host: <%= row.hostname %></p>
+    <p>Starts At: <%= row.start_time %></p>
+    <p>Ends At: <%= row.end_time %></p>
+    <br>
+  <% } %>
+<% } %>
+  
 </div>
 
 <%- include("footer"); %>

@@ -4,8 +4,6 @@ DROP PROCEDURE IF EXISTS register;
 DROP PROCEDURE IF EXISTS getuserbyname;
 DROP PROCEDURE IF EXISTS getuserbymail;
 DROP PROCEDURE IF EXISTS getuserbyid;
-DROP PROCEDURE IF EXISTS createMeeting;
-DROP PROCEDURE IF EXISTS addAttendantToMeeting;
 DROP PROCEDURE IF EXISTS initializeMeeting;
 DROP PROCEDURE IF EXISTS initializeAttendant;
 DROP PROCEDURE IF EXISTS initializeTimeForVoting;
@@ -15,6 +13,9 @@ DROP PROCEDURE IF EXISTS getSelectedInviteVote;
 DROP PROCEDURE IF EXISTS getHostedMeetings;
 DROP PROCEDURE IF EXISTS getMeetingVotes;
 DROP PROCEDURE IF EXISTS getVotesForMeeting;
+DROP PROCEDURE IF EXISTS getInviteMeetingByID;
+DROP PROCEDURE IF EXISTS getMeetingsBetweenDates;
+
 
 DELIMITER ;;
 CREATE PROCEDURE login(
@@ -80,34 +81,6 @@ BEGIN
     FROM users
     WHERE get_email = email
 ;
-END
-;;
-
-CREATE PROCEDURE createMeeting(
-	get_id VARCHAR(30),
-	get_host VARCHAR(15),
-	get_title VARCHAR(30),
-	get_start_time TIMESTAMP,
-    get_end_time TIMESTAMP,
-	get_description VARCHAR(300)
-)
-BEGIN
-	INSERT INTO meetings (id,hostname,title,start_time, end_time, description)
-	VALUES (get_id,get_host,get_title,get_start_time, get_end_time, get_description);
-    SELECT *
-    FROM meetings 
-    WHERE get_host = hostname AND get_title = title
-    ;
-END
-;;
-
-CREATE PROCEDURE addAttendantToMeeting(
-	get_attendant VARCHAR(15),
-    get_meetingID VARCHAR(30)
-)
-BEGIN
-	INSERT INTO attendants (attendant_name,meetingID)
-    VALUES (get_attendant, get_meetingID);
 END
 ;;
 
@@ -259,5 +232,43 @@ BEGIN
 	;
 END
 ;;
+
+CREATE PROCEDURE getInviteMeetingByID
+(
+	get_ID VARCHAR(30)
+)
+BEGIN
+	SELECT 
+    *
+    FROM invite_Meeting
+    WHERE id = get_ID
+    ;
+END
+;;
+
+CREATE PROCEDURE getMeetingsBetweenDates
+(
+	get_start_time TIMESTAMP,
+    get_end_time TIMESTAMP,
+    get_username VARCHAR(15)
+)
+BEGIN
+	SELECT 
+		m.title,
+		m.hostname,
+		m.description,
+		m.start_time,
+		m.end_time
+	FROM users 
+	LEFT JOIN attendants as a ON users.username = a.attendant_name
+	Left join meetings as m ON a.meetingID = m.id
+	WHERE users.username = get_username and
+		start_time >= get_start_time and 
+		start_time <= get_end_time
+	ORDER BY m.start_time ASC
+	;
+END
+;;
+
 DELIMITER ;
 

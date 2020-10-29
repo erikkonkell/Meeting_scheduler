@@ -12,6 +12,7 @@ const urlencodeParser = bodyParser.urlencoded({"extended": false});
 const bcrypt = require('bcrypt');
 const passport = require("passport");
 const initializePassport = require('../src/passport-config.js');
+const { getSelectedInviteVote } = require("../src/meeting_scheduler.js");
 
 // initializePassport(
 //   passport,
@@ -92,7 +93,26 @@ router.get('/mypage', checkAuthenticated, async (req, res) =>
   let data = {
     title: "My Page",
     name: temp.name,
-    login: true
+    login: true,
+    res: null
+  };
+  res.render('mypage.ejs', data)
+})
+
+router.post('/mypage', checkAuthenticated, async (req, res) =>
+{
+  let user = await getUser(req);
+  if(req.body.start == "" || req.body.end < req.body.start)
+  {
+    res.redirect('/mypage')
+    return
+  }
+  let datapack = await meeting.getMeetingsBetweenDates(req.body.start,req.body.end,user.name);
+  let data = {
+    title: "My Page",
+    name: user.name,
+    login: true,
+    res: datapack
   };
   res.render('mypage.ejs', data)
 })
@@ -125,6 +145,13 @@ router.post('/create_meeting', checkAuthenticated, async (req, res) =>
         error_title += "User: " + guests[i] + " did not exist\n"
       }    
     }
+  }
+  
+  else if(guests.length == 1 && guests[0] !="")
+  {
+    let exist = await meeting.getUserByName(guests[0])
+    if (!exist)
+      error_title += "user: " + guests[0] + " does not exist\n";
   }
   if(!req.body.title || req.body.title == "")
     error_title += "no title\n"
@@ -217,12 +244,23 @@ router.post('/meeting-invitation/:id', checkAuthenticated, async (req, res) =>
     invite_id: req.params.id,
     invite_user: req.body.user
   };
-  for(var i = 0; i < req.body.vote.length; i++)
+  if(req.body.vote.length > 1)
   {
-    datapack.start_time.push(req.body.start_time[i])
-    datapack.end_time.push(req.body.end_time[i])
+    for(var i = 0; i < req.body.vote.length; i++)
+    {
+      datapack.start_time.push(req.body.start_time[i])
+      datapack.end_time.push(req.body.end_time[i])
+      let boolValue = 0
+      if(req.body.vote[i] != "")
+        boolValue = 1
+      datapack.response.push(boolValue)
+    }
+  }
+  else{
+    datapack.start_time.push(req.body.start_time)
+    datapack.end_time.push(req.body.end_time)
     let boolValue = 0
-    if(req.body.vote[i] != "")
+    if(req.body.vote != "")
       boolValue = 1
     datapack.response.push(boolValue)
   }
@@ -295,12 +333,16 @@ router.post('/meeting-manager/:id/:start/:end', checkAuthenticated, async (req, 
   let users = req.body.users;
   let responses = req.body.responses;
   let gustInAttendents = [];
+  //if the host is also voting 
+  //and in case he has not singed upp of the meeting for whatever resson.
   if(users.indexOf(host) == -1)
     gustInAttendents.push(host)
   for (let i = 0; i < responses.length; i++) {
     if(responses[i] == "Yes" && gustInAttendents.indexOf(users[i]) == -1)
       gustInAttendents.push(users[i]);
   }
+  meeting.addMeetingToCalander(req.params.id,host,req.params.start,req.params.end,gustInAttendents)
+  res.redirect('/mypage')
 })
 
 //local functions  

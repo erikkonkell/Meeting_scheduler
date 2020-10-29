@@ -1,7 +1,9 @@
 use meeting_scheduler;
-
-DROP TABLE IF EXISTS `meetings`;
+/*drop tables with FOREIGN KEY first and order is important*/
 DROP TABLE IF EXISTS `attendants`;
+
+/*drop in any order*/
+DROP TABLE IF EXISTS `meetings`;
 DROP TABLE IF EXISTS `invite_users`;
 DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `validate_time`;
@@ -21,7 +23,7 @@ CREATE TABLE `users`(
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `meetings`(
+CREATE TABLE meetings(
 	`id` VARCHAR(30) NOT NULL,
     hostname VARCHAR(15),
     title VARCHAR(30),
@@ -32,11 +34,11 @@ CREATE TABLE `meetings`(
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `attendants`(
-	`attendant_name` VARCHAR(15) NOT NULL,
-    `meetingID` VARCHAR(30),
-    PRIMARY KEY(meetingID),
-    FOREIGN KEY (attendant_name) REFERENCES users(username)
+CREATE TABLE attendants(
+	attendant_name VARCHAR(15) NOT NULL,
+    meetingID VARCHAR(30),
+    FOREIGN KEY (attendant_name) REFERENCES users(username),
+    FOREIGN KEY (meetingID) REFERENCES meetings(id)
 )
 ENGINE = InnoDB;
 
@@ -55,12 +57,12 @@ CREATE Table `validate_time`(
     end_time TIMESTAMP,
     response BOOL,
     invite_id VARCHAR(30) NOT NULL,
-    `invite_user` VARCHAR(15) NOT NULL
+    invite_user VARCHAR(15) NOT NULL
 )
 ENGINE = InnoDB;
-CREATE TABLE `invite_users`(
-	`invite_id` VARCHAR(30) NOT NULL,
-    `invite_user` VARCHAR(15) NOT NULL
+CREATE TABLE invite_users(
+	invite_id VARCHAR(30) NOT NULL,
+    invite_user VARCHAR(15) NOT NULL
     
     /*
     PRIMARY KEY(invite_id),

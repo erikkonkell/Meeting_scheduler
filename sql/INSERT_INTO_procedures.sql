@@ -15,7 +15,7 @@ CREATE PROCEDURE createConfirmedMeeting
 )
 BEGIN
 	INSERT INTO meetings(id,hostname,title,start_time,end_time,`description`)
-    VALUES(get_id,get_hostname,get_title,get_start_time,get_end_timem,get_description)
+    VALUES(get_id,get_hostname,get_title,get_start_time,get_end_time,get_description)
     ;
 END
 ;;

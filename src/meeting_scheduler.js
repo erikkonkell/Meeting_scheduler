@@ -14,7 +14,6 @@ module.exports = {
     getUserByName: GetUserByName,
     getUserById: GetUserById,
     getUserByMail: GetUserByMail,
-    createMeeting: CreateMeeting,
     initializeMeeting: InitializeMeeting,
     getUserInvitations: GetUserInvitations,
     getSelectedInviteVote: GetSelectedInviteVote,
@@ -22,7 +21,9 @@ module.exports = {
     getHostedMeetings: GetHostedMeetings,
     getMeetingVotes:GetMeetingVotes,
     dateFix:dateFix,
-    getVotesForMeeting: GetVotesForMeeting
+    getVotesForMeeting: GetVotesForMeeting,
+    addMeetingToCalander: addMeetingToCalander,
+    getMeetingsBetweenDates: getMeetingsBetweenDates
 };
 /**
  * Main function.
@@ -180,8 +181,29 @@ async function GetVotesForMeeting(id,start,end)
 }
 
 async function addMeetingToCalander(id,hostname,start_time,end_time,users) {
-    let getAdditionalData = `CALL`
+    let getAdditionalDataSQL = `CALL getInviteMeetingByID(?)`;
+    let createMettingSQL = `CALL createConfirmedMeeting(?,?,?,?,?,?)`;
+    let addAttendantToMeeting = `CALL inviteConfirmedAttendent(?,?)`;
+    let deleteInviteMeetingSQL = `CALL deleteFromInviteMeeting(?)`;
+    let resData = await db.query(getAdditionalDataSQL,[id]);
+    //remove unnesesary arrays
+    resData = resData[0]
+    resData = resData[0]
+    let title = resData.title
+    let description = resData.description
+    await db.query(createMettingSQL,[id,hostname,title,start_time,end_time,description])
+    users.forEach(async user =>  {
+        await db.query(addAttendantToMeeting,[user,id])
+    });
+    let res = await db.query(deleteInviteMeetingSQL,[id])
 }
+
+async function getMeetingsBetweenDates(start,end,user){
+    let sql = `CALL getMeetingsBetweenDates(?,?,?)`;
+    let res = await db.query(sql,[start,end,user]);
+    return res[0];
+}
+
 
 function dateFix(dateString) {
     let date = dateString.split(" ")
